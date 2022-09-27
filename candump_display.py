@@ -63,6 +63,11 @@ def main():
     num_voltage = 0
     num_bat_persentage = 0.0
 
+    #Drawing Window
+    win = pg.plot()
+    win.setWindowTitle('ESC Voltage: BarGraph')
+
+
     for i in range(0, 32):
         #print("Gachacon Num.: " + str(i) + ", 00.0 V, Battery: 000.00 %")
         #print("Gachacon Num.: %2d, %2.1f V, Battery: %2.2f %", num_gachacon, num_voltage, num_bat_persentage)
@@ -113,6 +118,22 @@ def main():
                             int(line[pos_com13[1]+13], base = 16) * 16  + \
                             int(line[pos_com13[1]+14], base = 16)) / 10.0
             #print("debug: " + "Voltage: " + str(num_voltage))
+
+            #Update Voltage buffer
+            voltage_list[num_gachacon] = num_voltage;
+
+	    x = np.arange(10)
+            y1 = np.sin(x)
+            y2 = 1.1 * np.sin(x+1)
+            y3 = 1.2 * np.sin(x+2)
+
+            bg1 = pg.BarGraphItem(x=x, height=y1, width=0.3, brush='r')
+            bg2 = pg.BarGraphItem(x=x+0.33, height=y2, width=0.3, brush='g')
+            bg3 = pg.BarGraphItem(x=x+0.66, height=y3, width=0.3, brush='b')
+
+            win.addItem(bg1)
+            win.addItem(bg2)
+            win.addItem(bg3)
 
             # Li-Po battery range: 4.2-3.2, 12 cells
             # 4.2 * 12 = 50.4, 4.25 * 12 = 51.0, ,3.2 * 12 = 38.4, 50.4 - 38.4 = 12.0
