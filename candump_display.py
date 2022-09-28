@@ -19,6 +19,7 @@ import re
 
 import numpy as np
 import pyqtgraph as pg
+from pyqtgraph.Qt import QtCore, QtGui
 
 def check_file_provided():
     # 指定した先にファイルが存在するかをチェック
@@ -55,6 +56,60 @@ def print_headers():
     print("Offset 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F Encode to ASCII")
     print("")
 
+#def main():
+class PlotGraph:
+    def __init__(self):
+	# Initialize other
+        self.voltage_list = np.zeros(32)
+        throttle = act_throttle = voltage = bus_current = phase_current = 0
+        num_gachacon = 0
+        num_voltage = 0
+        num_bat_persentage = 0.0
+
+        for i in range(0, 32):
+            self.voltage_list[i] = 40
+            
+        # UIを設定
+        self.win = pg.GraphicsWindow()
+        self.win.setWindowTitle('ESC Voltage plot')
+        self.plt = self.win.addPlot()
+        #self.plt.setYRange(0, 1)
+        self.plt.setYRange(0, 50)
+        self.curve = self.plt.plot(pen=(0, 0, 255))
+
+        # データを更新する関数を呼び出す時間を設定
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.update)
+        self.timer.start(10)
+
+        self.data = np.zeros(32)
+
+    #graphic data update
+    def update(self):
+        #RANDOM graph
+        #self.data = np.delete(self.data, 0)
+        #self.data = np.append(self.data, np.random.rand())
+        #self.curve.setData(self.data)
+
+        # ORE-SEN graph
+        #for i in range(0, 32):
+        #    self.data[i] = self.voltage_list[i] + np.random.rand() * 5
+        #self.curve.setData(self.data)
+
+        # Bar Graph
+        #for i in range(0, 32):
+        #    bg1 = pg.BarGraphItem(x=range(5) , height=39 + np.random.rand() * 5 , width=0.3, brush='r')
+        #    self.win.addItem(bg1)
+
+        for i in range(0, 32):
+            self.data[i] = self.voltage_list[i] + np.random.rand() * 5
+        x = np.arange(32)
+        #y1 = np.linspace(0, 20, num=64)
+
+        bg1 = pg.BarGraphItem(x=x, height=self.data, width=0.6, brush='g')
+        self.plt.addItem(bg1)
+        
+
 def main():
     #print_headers()
     voltage_list = []
@@ -64,9 +119,8 @@ def main():
     num_bat_persentage = 0.0
 
     #Drawing Window
-    win = pg.plot()
-    win.setWindowTitle('ESC Voltage: BarGraph')
-
+    #win = pg.plot()
+    #win.setWindowTitle('ESC Voltage: BarGraph')
 
     for i in range(0, 32):
         #print("Gachacon Num.: " + str(i) + ", 00.0 V, Battery: 000.00 %")
@@ -120,20 +174,7 @@ def main():
             #print("debug: " + "Voltage: " + str(num_voltage))
 
             #Update Voltage buffer
-            voltage_list[num_gachacon] = num_voltage;
-
-	    x = np.arange(10)
-            y1 = np.sin(x)
-            y2 = 1.1 * np.sin(x+1)
-            y3 = 1.2 * np.sin(x+2)
-
-            bg1 = pg.BarGraphItem(x=x, height=y1, width=0.3, brush='r')
-            bg2 = pg.BarGraphItem(x=x+0.33, height=y2, width=0.3, brush='g')
-            bg3 = pg.BarGraphItem(x=x+0.66, height=y3, width=0.3, brush='b')
-
-            win.addItem(bg1)
-            win.addItem(bg2)
-            win.addItem(bg3)
+            #voltage_list[num_gachacon] = num_voltage;
 
             # Li-Po battery range: 4.2-3.2, 12 cells
             # 4.2 * 12 = 50.4, 4.25 * 12 = 51.0, ,3.2 * 12 = 38.4, 50.4 - 38.4 = 12.0
@@ -159,13 +200,22 @@ def main():
         else:
             None
             #print("debug: " + line)
+
+
         # end if
     # end for
 # end def
 
-if __name__ == '__main__':
-    try:
-        main()
-    except KeyboardInterrupt:
-        print('Exiting...')
-        sys.exit(0)
+if __name__ == "__main__":
+    graphWin = PlotGraph()
+    #graphWin = main()   
+    
+    if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
+        QtGui.QApplication.instance().exec_()
+
+#if __name__ == '__main__':
+#    try:
+#        main()
+#    except KeyboardInterrupt:
+#        print('Exiting...')
+#        sys.exit(0)
