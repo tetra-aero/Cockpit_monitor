@@ -97,9 +97,9 @@ class PlotGraph:
         #self.curve.setData(self.data)
 
         # Bar Graph
-        #for i in range(0, 32):
-        #    bg1 = pg.BarGraphItem(x=range(5) , height=39 + np.random.rand() * 5 , width=0.3, brush='r')
-        #    self.win.addItem(bg1)
+
+	# <!> IMPORTANT : This method is Old Plot BG Clear before new Plot graph. 
+        self.plt.clear()
 
         for i in range(0, 32):
             self.data[i] = self.voltage_list[i] + np.random.rand() * 5
@@ -108,7 +108,7 @@ class PlotGraph:
 
         bg1 = pg.BarGraphItem(x=x, height=self.data, width=0.6, brush='g')
         self.plt.addItem(bg1)
-        
+   
 
 def main():
     #print_headers()
