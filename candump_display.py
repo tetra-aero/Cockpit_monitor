@@ -56,6 +56,8 @@ def print_headers():
     print("Offset 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F Encode to ASCII")
     print("")
 
+
+
 #def main():
 class PlotGraph:
     def __init__(self):
@@ -86,19 +88,17 @@ class PlotGraph:
 
     #graphic data update
     def update(self):
-        #RANDOM graph
-        #self.data = np.delete(self.data, 0)
+        #サンプル描画：折れ線グラフ        #self.data = np.delete(self.data, 0)
         #self.data = np.append(self.data, np.random.rand())
         #self.curve.setData(self.data)
 
-        # ORE-SEN graph
+        #サンプル描画：折れ線グラフ
         #for i in range(0, 32):
         #    self.data[i] = self.voltage_list[i] + np.random.rand() * 5
         #self.curve.setData(self.data)
 
         # Bar Graph
-
-	# <!> IMPORTANT : This method is Old Plot BG Clear before new Plot graph. 
+        # <!> 重要 : プロットを描画する前に、古い描画を消しておく（重ね描きになってしまう） 
         self.plt.clear()
 
         for i in range(0, 32):
