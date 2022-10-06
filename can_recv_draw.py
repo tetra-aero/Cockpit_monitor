@@ -24,27 +24,22 @@ import can
 
 
 esc_data_v = np.zeros(32)
+esc_throttle = np.zeros(32)
 
 
 class PlotGraph:
     def __init__(self):
-	# Initialize other
-        self.voltage_list = np.zeros(32)
-        throttle = act_throttle = voltage = bus_current = phase_current = 0
-        num_gachacon = 0
-        num_voltage = 0
-        num_bat_persentage = 0.0
-
-        for i in range(0, 32):
-            self.voltage_list[i] = 40
-            
+          
         # UIを設定
         self.win = pg.GraphicsWindow()
-        self.win.setWindowTitle('ESC Voltage plot')
+        self.win.setWindowTitle('ESC Voltage')
+        self.win.resize(800,600)
         self.plt = self.win.addPlot()
-        #self.plt.setYRange(0, 1)
-        self.plt.setYRange(0, 50)
+        self.plt.setXRange(0, 32)
+        #self.plt.setYRange(0, 50)
+        self.plt.setYRange(30, 56)
         self.curve = self.plt.plot(pen=(0, 0, 255))
+
 
         # データを更新する関数を呼び出す時間を設定
         self.timer = QtCore.QTimer()
@@ -56,9 +51,6 @@ class PlotGraph:
 
     #graphic data update
     def update(self):
-        #棒グラフ描画
-        # <!> 重要 : プロットを描画する前に、古い描画を消しておく（重ね描きになってしまう） 
-        self.plt.clear()
 
         #Making 32 sample datas (Random)
         #for i in range(0, 32):
@@ -66,9 +58,48 @@ class PlotGraph:
         x = np.arange(32)
         #y1 = np.linspace(0, 20, num=64)
 
+        #棒グラフ描画
+        # <!> 重要 : プロットを描画する前に、古い描画を消しておく（重ね描きになってしまう） 
+        self.plt.clear()
         # data配列をデータとした、緑の棒グラフを作成
         bg1 = pg.BarGraphItem(x=x, height=esc_data_v, width=0.6, brush='g')
         self.plt.addItem(bg1)
+
+class PlotGraph2:
+    def __init__(self):
+        
+        # UIを設定 2
+        self.win2 = pg.GraphicsWindow()
+        self.win2.setWindowTitle('ESC throttle')
+        self.plt2 = self.win2.addPlot()
+        self.plt2.setXRange(0, 32)
+        self.plt2.setYRange(0, 1000)
+        self.curve2 = self.plt2.plot(pen=(0, 0, 255))
+
+        # データを更新する関数を呼び出す時間を設定
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.update)
+        self.timer.start(10)
+
+        #self.data = np.zeros(32)
+        esc_throttle = np.zeros(32)
+
+
+    #graphic data update
+    def update(self):
+
+        #Making 32 sample datas (Random)
+        #for i in range(0, 32):
+        #    self.data[i] = self.voltage_list[i] + np.random.rand() * 5
+        x = np.arange(32)
+        #y1 = np.linspace(0, 20, num=64)
+
+        #棒グラフ描画
+        # <!> 重要 : プロットを描画する前に、古い描画を消しておく（重ね描きになってしまう） 
+        self.plt2.clear()
+        # data配列をデータとした、赤の棒グラフを作成
+        bg2 = pg.BarGraphItem(x=x, height=esc_throttle, width=0.6, brush='r')
+        self.plt2.addItem(bg2)
 
 
 
@@ -90,10 +121,13 @@ class CallBackFunction(can.Listener):
 #    print(msg.data)
 #    print(msg.data.hex())
 
+    #Making 32 sample datas (Random)
+    #for i in range(0, 32):
+    #    esc_data_v[i] = 40 + np.random.rand() * 5
 
     #ESC Volt (ID=0x13) Pickup
     if re.search("0x13", hex(msg.arbitration_id)) != None:
-        print(msg)
+        #print(msg)
         #ESC ID
         #print(hex(msg.arbitration_id)[-2:])
         #ESC Volt data
@@ -103,15 +137,18 @@ class CallBackFunction(can.Listener):
         #for i in range(0, 32):
         #    esc_data_v[i] = 40 + np.random.rand() * 5
 
-
         esc_data_v[int(hex(msg.arbitration_id)[-2:],16)] = int((msg.data.hex())[1:],16)/10
 
 
-    #Making 32 sample datas (Random)
-    #for i in range(0, 32):
-    #    esc_data_v[i] = 40 + np.random.rand() * 5
+    #ESC Volt (ID=0x13) Pickup
+    if re.search("0x20", hex(msg.arbitration_id)) != None:
+        print(msg)
+        #ESC ID
+        #print(hex(msg.arbitration_id)[-2:])
+        #ESC Volt data
+        #print((msg.data.hex())[1:])
 
-
+        esc_throttle[int(hex(msg.arbitration_id)[-2:],16)] = int((msg.data.hex())[1:],16)
 
 # コールバック関数のインスタンス生成
 call_back_function = CallBackFunction()
@@ -129,6 +166,7 @@ can.Notifier(bus1, [call_back_function, ])
 # 何もしない処理（受信のコールバックのみ）
 if __name__ == "__main__":
     graphWin = PlotGraph()
+    graphWin2 = PlotGraph2()
     #graphWin = main()   
     
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
