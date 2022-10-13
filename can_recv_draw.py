@@ -167,6 +167,10 @@ can.Notifier(bus1, [call_back_function, ])
 if __name__ == "__main__":
     graphWin = PlotGraph()
     graphWin2 = PlotGraph2()
+    #graphWin3 = PlotGraph2()
+    #graphWin4 = PlotGraph2()
+    #graphWin5 = PlotGraph2()
+    #graphWin6 = PlotGraph2()
     #graphWin = main()   
     
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
