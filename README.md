@@ -13,7 +13,7 @@ pip3 install python-can
 ```
 
 ## Debug
-### case of vertual can port
+### case of virtual can port
 - terminal 1
 ```
 sudo modprobe vcan
