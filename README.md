@@ -7,6 +7,8 @@ Cockpit panel GUI teTra Mk-5
 
 ## Requirement
 ```
+sudo apt install can-utils
+sudo apt install net-tools
 pip3 install python-can
 ```
 
@@ -41,3 +43,7 @@ canplayer can0=can_spi0.0 can0=can_spi0.1 can0=can_spi1.0 can0=can_spi1.1 can0=c
 ```
 python3 can_recv_draw.py 
 ```
+
+### Reference
+- https://gist.github.com/takurx/e19c1dbeba413e5a24337b98defc60a7
+- https://gist.github.com/takurx/9b324a2d47442c78b3474c87b34bae59
