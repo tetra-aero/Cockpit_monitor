@@ -1,15 +1,14 @@
-# example: $ candump can1 | python3 candump-display-escdata.py
-#
-# chiya@ujimatsu:~/JetsonWorks/file-pyserial-uart-simulator/binary_data$ candump can1 | python3 candump-display-escdata.py
-# 
-# #### BINARY TO HEX DUMP - USING PYTHON3.6 ####
-# 
-# Offset 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F Encode to ASCII
-# 
-# debug:   can1  0000160F   [2]  17 70
-# 
-# Gachacon Num.: 15, Battery: 119.04761904761904 %, 60.0 V
-# 
+#!/usr/bin/env python3
+"""can_recv_draw.py
+- Usage
+$ python3 can_recv_draw.py
+"""
+#__all__ = ['sys']
+__author__ = "Yoshio Akimoto <yoshio.akimoto@tetra-aviation.com>, Yoshihiro Nakagawa <yoshihiro.nakagawa@tetra-aviation.com>"
+__date__ = "14 October 2022"
+
+__version__ = "1.0.0"
+__credits__ = "teTra Aviation Corp."
 
 import sys
 import os.path

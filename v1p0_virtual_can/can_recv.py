@@ -1,4 +1,16 @@
-#CAN0～CAN5メッセージ受信
+#!/usr/bin/env python3
+"""can_recv.py
+CAN0～CAN5メッセージ受信
+
+- Usage
+$ python3 can_recv.py
+"""
+#__all__ = ['sys']
+__author__ = "Yoshio Akimoto <yoshio.akimoto@tetra-aviation.com>, Yoshihiro Nakagawa <yoshihiro.nakagawa@tetra-aviation.com>"
+__date__ = "14 October 2022"
+
+__version__ = "1.0.0"
+__credits__ = "teTra Aviation Corp."
 
 import can
 
