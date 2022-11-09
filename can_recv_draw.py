@@ -230,9 +230,9 @@ class LineGraph:
 
 # CANバスの初期化 (#6,#7は未実装。予備)
 bus1 = can.interface.Bus(channel = 'can_spi0.0', bustype='socketcan', bitrate=125000, canfilters=None)
-#bus2 = can.interface.Bus(channel = 'can_spi0.1', bustype='socketcan', bitrate=125000, canfilters=None)
-#bus3 = can.interface.Bus(channel = 'can_spi1.0', bustype='socketcan', bitrate=125000, canfilters=None)
-#bus4 = can.interface.Bus(channel = 'can_spi1.1', bustype='socketcan', bitrate=125000, canfilters=None)
+bus2 = can.interface.Bus(channel = 'can_spi0.1', bustype='socketcan', bitrate=125000, canfilters=None)
+bus3 = can.interface.Bus(channel = 'can_spi1.0', bustype='socketcan', bitrate=125000, canfilters=None)
+bus4 = can.interface.Bus(channel = 'can_spi1.1', bustype='socketcan', bitrate=125000, canfilters=None)
 #bus5 = can.interface.Bus(channel = 'can_spi1.2', bustype='socketcan', bitrate=125000, canfilters=None)
 #bus6 = can.interface.Bus(channel = 'can_spi2.0', bustype='socketcan', bitrate=125000, canfilters=None)
 #bus7 = can.interface.Bus(channel = 'can_spi2.1', bustype='socketcan', bitrate=125000, canfilters=None)
@@ -247,34 +247,97 @@ bus1 = can.interface.Bus(channel = 'can_spi0.0', bustype='socketcan', bitrate=12
 
 def send_ecu_check():
     #000081: CANID_CANBUS_Health_ask
-    for i in range(0, 24):        
+    for i in range(0, 6):        
+        msg = can.Message(arbitration_id = 0x08100 + i,
+                     data= [1,2,3,4],
+                     is_extended_id = True)
+        bus3.send(msg)
+
+    for i in range(6, 12):        
+        msg = can.Message(arbitration_id = 0x08100 + i,
+                     data= [1,2,3,4],
+                     is_extended_id = True)
+        bus4.send(msg)
+
+    for i in range(12, 18):        
         msg = can.Message(arbitration_id = 0x08100 + i,
                      data= [1,2,3,4],
                      is_extended_id = True)
         bus1.send(msg)
 
+    for i in range(18, 24):        
+        msg = can.Message(arbitration_id = 0x08100 + i,
+                     data= [1,2,3,4],
+                     is_extended_id = True)
+        bus2.send(msg)
+
+    #GUI status change
     for i in range(0, 24):
         esc_active[i] = 2   # 2= Yellow
         #esc_active_timer[i] = 3 * 10 # 3sec
 
 def send_contactor_on():
     #000012: contactor_on
-    for i in range(0, 24):        
+    for i in range(0, 6):        
+        msg = can.Message(arbitration_id = 0x01200 + i,
+                     data= [0xC0],
+                     is_extended_id = True)
+        bus3.send(msg)
+        contact_active[i] = 1
+
+    for i in range(6, 12):        
+        msg = can.Message(arbitration_id = 0x01200 + i,
+                     data= [0xC0],
+                     is_extended_id = True)
+        bus4.send(msg)
+        contact_active[i] = 1
+
+    for i in range(12, 18):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0xC0],
                      is_extended_id = True)
         bus1.send(msg)
         contact_active[i] = 1
 
+    for i in range(18, 24):        
+        msg = can.Message(arbitration_id = 0x01200 + i,
+                     data= [0xC0],
+                     is_extended_id = True)
+        bus2.send(msg)
+        contact_active[i] = 1
+
 
 def send_contactor_off():
     #000012: contactor_off
-    for i in range(0, 24):        
+    for i in range(0, 6):        
+        msg = can.Message(arbitration_id = 0x01200 + i,
+                     data= [0x00],
+                     is_extended_id = True)
+        bus3.send(msg)
+        contact_active[i] = 2
+
+    for i in range(6, 12):        
+        msg = can.Message(arbitration_id = 0x01200 + i,
+                     data= [0x00],
+                     is_extended_id = True)
+        bus4.send(msg)
+        contact_active[i] = 2
+
+    for i in range(12, 18):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0x00],
                      is_extended_id = True)
         bus1.send(msg)
         contact_active[i] = 2
+
+    for i in range(18, 24):        
+        msg = can.Message(arbitration_id = 0x01200 + i,
+                     data= [0x00],
+                     is_extended_id = True)
+        bus2.send(msg)
+        contact_active[i] = 2
+
+
 
 class Widget(QWidget):
     def __init__(self, parent=None):
@@ -424,9 +487,9 @@ call_back_function = CallBackFunction()
 
 # コールバック関数登録
 can.Notifier(bus1, [call_back_function, ])
-#can.Notifier(bus2, [call_back_function, ])
-#can.Notifier(bus3, [call_back_function, ])
-#can.Notifier(bus4, [call_back_function, ])
+can.Notifier(bus2, [call_back_function, ])
+can.Notifier(bus3, [call_back_function, ])
+can.Notifier(bus4, [call_back_function, ])
 #can.Notifier(bus5, [call_back_function, ])
 #can.Notifier(bus6, [call_back_function, ])
 #can.Notifier(bus7, [call_back_function, ])
@@ -467,9 +530,9 @@ if __name__ == "__main__":
         print('exit')
         #GPIO.output(beep_pin, False)
         bus1.shutdown()
-#        bus2.shutdown()
-#        bus3.shutdown()
-#        bus4.shutdown()
+        bus2.shutdown()
+        bus3.shutdown()
+        bus4.shutdown()
 #        bus5.shutdown()
 ##  bus6.shutdown()
 ##  bus7.shutdown()
