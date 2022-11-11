@@ -251,25 +251,25 @@ def send_ecu_check():
         msg = can.Message(arbitration_id = 0x08100 + i,
                      data= [1,2,3,4],
                      is_extended_id = True)
-        bus3.send(msg)
+        bus1.send(msg)
 
     for i in range(6, 12):        
         msg = can.Message(arbitration_id = 0x08100 + i,
                      data= [1,2,3,4],
                      is_extended_id = True)
-        bus4.send(msg)
+        bus2.send(msg)
 
     for i in range(12, 18):        
         msg = can.Message(arbitration_id = 0x08100 + i,
                      data= [1,2,3,4],
                      is_extended_id = True)
-        bus1.send(msg)
+        bus3.send(msg)
 
     for i in range(18, 24):        
         msg = can.Message(arbitration_id = 0x08100 + i,
                      data= [1,2,3,4],
                      is_extended_id = True)
-        bus2.send(msg)
+        bus4.send(msg)
 
     #GUI status change
     for i in range(0, 24):
@@ -282,28 +282,28 @@ def send_contactor_on():
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0xC0],
                      is_extended_id = True)
-        bus3.send(msg)
+        bus1.send(msg)
         contact_active[i] = 1
 
     for i in range(6, 12):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0xC0],
                      is_extended_id = True)
-        bus4.send(msg)
+        bus2.send(msg)
         contact_active[i] = 1
 
     for i in range(12, 18):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0xC0],
                      is_extended_id = True)
-        bus1.send(msg)
+        bus3.send(msg)
         contact_active[i] = 1
 
     for i in range(18, 24):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0xC0],
                      is_extended_id = True)
-        bus2.send(msg)
+        bus4.send(msg)
         contact_active[i] = 1
 
 
@@ -313,28 +313,28 @@ def send_contactor_off():
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0x00],
                      is_extended_id = True)
-        bus3.send(msg)
+        bus1.send(msg)
         contact_active[i] = 2
 
     for i in range(6, 12):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0x00],
                      is_extended_id = True)
-        bus4.send(msg)
+        bus2.send(msg)
         contact_active[i] = 2
 
     for i in range(12, 18):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0x00],
                      is_extended_id = True)
-        bus1.send(msg)
+        bus3.send(msg)
         contact_active[i] = 2
 
     for i in range(18, 24):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0x00],
                      is_extended_id = True)
-        bus2.send(msg)
+        bus4.send(msg)
         contact_active[i] = 2
 
 
