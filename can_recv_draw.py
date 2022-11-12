@@ -229,10 +229,10 @@ class LineGraph:
 
 
 # CANバスの初期化 (#6,#7は未実装。予備)
-bus1 = can.interface.Bus(channel = 'can_spi0.0', bustype='socketcan', bitrate=125000, canfilters=None)
-bus2 = can.interface.Bus(channel = 'can_spi0.1', bustype='socketcan', bitrate=125000, canfilters=None)
-bus3 = can.interface.Bus(channel = 'can_spi1.0', bustype='socketcan', bitrate=125000, canfilters=None)
-bus4 = can.interface.Bus(channel = 'can_spi1.1', bustype='socketcan', bitrate=125000, canfilters=None)
+bus1 = can.interface.Bus(channel = 'can_spi0.0', bustype='socketcan', bitrate=125000, canfilters=None)   #Front Right wing from AvioDsubBoard and Physical Harness
+bus2 = can.interface.Bus(channel = 'can_spi0.1', bustype='socketcan', bitrate=125000, canfilters=None)   #Front Left  wing from AvioDsubBoard and Physical Harness
+bus3 = can.interface.Bus(channel = 'can_spi1.0', bustype='socketcan', bitrate=125000, canfilters=None)   #Rear  Right wing from AvioDsubBoard and Physical Harness
+bus4 = can.interface.Bus(channel = 'can_spi1.1', bustype='socketcan', bitrate=125000, canfilters=None)   #Rear  Left  wing from AvioDsubBoard and Physical Harness
 #bus5 = can.interface.Bus(channel = 'can_spi1.2', bustype='socketcan', bitrate=125000, canfilters=None)
 #bus6 = can.interface.Bus(channel = 'can_spi2.0', bustype='socketcan', bitrate=125000, canfilters=None)
 #bus7 = can.interface.Bus(channel = 'can_spi2.1', bustype='socketcan', bitrate=125000, canfilters=None)
@@ -247,29 +247,29 @@ bus4 = can.interface.Bus(channel = 'can_spi1.1', bustype='socketcan', bitrate=12
 
 def send_ecu_check():
     #000081: CANID_CANBUS_Health_ask
-    for i in range(0, 6):        
-        msg = can.Message(arbitration_id = 0x08100 + i,
-                     data= [1,2,3,4],
-                     is_extended_id = True)
-        bus1.send(msg)
-
-    for i in range(6, 12):        
+    for i in range(0, 6):   #Gachacon 1-6, Front Right wing   #range(0, 6) -> 0-5
         msg = can.Message(arbitration_id = 0x08100 + i,
                      data= [1,2,3,4],
                      is_extended_id = True)
         bus2.send(msg)
 
-    for i in range(12, 18):        
+    for i in range(6, 12):   #Gachacon 7-12, Front Right wing   #range(6, 12) -> 6-11
         msg = can.Message(arbitration_id = 0x08100 + i,
                      data= [1,2,3,4],
                      is_extended_id = True)
-        bus3.send(msg)
+        bus1.send(msg)
 
-    for i in range(18, 24):        
+    for i in range(12, 18):   #Gachacon 13-18, Front Right wing   #range(12, 18) -> 12-17
         msg = can.Message(arbitration_id = 0x08100 + i,
                      data= [1,2,3,4],
                      is_extended_id = True)
         bus4.send(msg)
+
+    for i in range(18, 24):   #Gachacon 19-24, Front Right wing   #range(18, 24) -> 18-23
+        msg = can.Message(arbitration_id = 0x08100 + i,
+                     data= [1,2,3,4],
+                     is_extended_id = True)
+        bus3.send(msg)
 
     #GUI status change
     for i in range(0, 24):
@@ -282,28 +282,28 @@ def send_contactor_on():
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0xC0],
                      is_extended_id = True)
-        bus1.send(msg)
+        bus2.send(msg)
         contact_active[i] = 1
 
     for i in range(6, 12):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0xC0],
                      is_extended_id = True)
-        bus2.send(msg)
+        bus1.send(msg)
         contact_active[i] = 1
 
     for i in range(12, 18):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0xC0],
                      is_extended_id = True)
-        bus3.send(msg)
+        bus4.send(msg)
         contact_active[i] = 1
 
     for i in range(18, 24):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0xC0],
                      is_extended_id = True)
-        bus4.send(msg)
+        bus3.send(msg)
         contact_active[i] = 1
 
 
@@ -313,28 +313,28 @@ def send_contactor_off():
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0x00],
                      is_extended_id = True)
-        bus1.send(msg)
+        bus2.send(msg)
         contact_active[i] = 2
 
     for i in range(6, 12):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0x00],
                      is_extended_id = True)
-        bus2.send(msg)
+        bus1.send(msg)
         contact_active[i] = 2
 
     for i in range(12, 18):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0x00],
                      is_extended_id = True)
-        bus3.send(msg)
+        bus4.send(msg)
         contact_active[i] = 2
 
     for i in range(18, 24):        
         msg = can.Message(arbitration_id = 0x01200 + i,
                      data= [0x00],
                      is_extended_id = True)
-        bus4.send(msg)
+        bus3.send(msg)
         contact_active[i] = 2
 
 
