@@ -117,12 +117,12 @@ contact_graph_xy =(
 #000082: CANID_CANBUS_Health_res
 
 #global array
-esc_data_v = np.zeros(32)
-esc_throttle = np.zeros(32)
-esc_active = np.zeros(32)
-esc_active_timer = np.zeros(32)
+esc_data_v = np.zeros(24)
+esc_throttle = np.zeros(24)
+esc_active = np.zeros(24)
+esc_active_timer = np.zeros(24)
 
-contact_active = np.zeros(32)
+contact_active = np.zeros(24)
 
 class PlotGraph:
     def __init__(self):
@@ -132,7 +132,7 @@ class PlotGraph:
         self.win.setWindowTitle('ESC Voltage')
         self.win.resize(800,600)
         self.plt = self.win.addPlot()
-        self.plt.setXRange(0, 32)
+        self.plt.setXRange(0, 24)
         #self.plt.setYRange(0, 50)
         self.plt.setYRange(30, 56)
         self.curve = self.plt.plot(pen=(0, 0, 255))
@@ -153,7 +153,7 @@ class PlotGraph:
         #Making 32 sample datas (Random)
         #for i in range(0, 32):
         #    self.data[i] = self.voltage_list[i] + np.random.rand() * 5
-        x = np.arange(32)
+        x = np.arange(24)
         #y1 = np.linspace(0, 20, num=64)
 
         #棒グラフ描画
@@ -170,7 +170,7 @@ class PlotGraph2:
         self.win2 = pg.GraphicsWindow()
         self.win2.setWindowTitle('ESC throttle')
         self.plt2 = self.win2.addPlot()
-        self.plt2.setXRange(0, 32)
+        self.plt2.setXRange(0, 24)
         self.plt2.setYRange(0, 1000)
         self.curve2 = self.plt2.plot(pen=(0, 0, 255))
 
@@ -191,7 +191,7 @@ class PlotGraph2:
         #Making 32 sample datas (Random)
         #for i in range(0, 32):
         #    self.data[i] = self.voltage_list[i] + np.random.rand() * 5
-        x = np.arange(32)
+        x = np.arange(24)
         #y1 = np.linspace(0, 20, num=64)
 
         #棒グラフ描画
@@ -206,7 +206,7 @@ class LineGraph:
     def __init__(self):
         # UIを設定
         self.win = pg.GraphicsWindow()
-        self.win.setWindowTitle('Avr.Voltage #32')
+        self.win.setWindowTitle('Avr.Voltage #24')
         self.plt = self.win.addPlot()
         self.plt.setYRange(30, 56)
         self.plt.setXRange(0, 10*60*10) #10min
@@ -247,26 +247,26 @@ bus4 = can.interface.Bus(channel = 'can_spi1.1', bustype='socketcan', bitrate=12
 
 def send_ecu_check():
     #000081: CANID_CANBUS_Health_ask
-    for i in range(0, 6):   #Gachacon 1-6, Front Right wing   #range(0, 6) -> 0-5
-        msg = can.Message(arbitration_id = 0x08100 + i,
+    for i in range(0, 6):   #Gachacon 1-6, Front Left wing   #range(0, 6) -> 0-5
+        msg = can.Message(arbitration_id = 0x08100 + i + 1,
                      data= [1,2,3,4],
                      is_extended_id = True)
         bus2.send(msg)
 
     for i in range(6, 12):   #Gachacon 7-12, Front Right wing   #range(6, 12) -> 6-11
-        msg = can.Message(arbitration_id = 0x08100 + i,
+        msg = can.Message(arbitration_id = 0x08100 + i + 1,
                      data= [1,2,3,4],
                      is_extended_id = True)
         bus1.send(msg)
 
-    for i in range(12, 18):   #Gachacon 13-18, Front Right wing   #range(12, 18) -> 12-17
-        msg = can.Message(arbitration_id = 0x08100 + i,
+    for i in range(12, 18):   #Gachacon 13-18, Rear Left wing   #range(12, 18) -> 12-17
+        msg = can.Message(arbitration_id = 0x08100 + i + 1,
                      data= [1,2,3,4],
                      is_extended_id = True)
         bus4.send(msg)
 
-    for i in range(18, 24):   #Gachacon 19-24, Front Right wing   #range(18, 24) -> 18-23
-        msg = can.Message(arbitration_id = 0x08100 + i,
+    for i in range(18, 24):   #Gachacon 19-24, Rear Right wing   #range(18, 24) -> 18-23
+        msg = can.Message(arbitration_id = 0x08100 + i + 1,
                      data= [1,2,3,4],
                      is_extended_id = True)
         bus3.send(msg)
@@ -279,28 +279,28 @@ def send_ecu_check():
 def send_contactor_on():
     #000012: contactor_on
     for i in range(0, 6):        
-        msg = can.Message(arbitration_id = 0x01200 + i,
+        msg = can.Message(arbitration_id = 0x01200 + i + 1,
                      data= [0xC0],
                      is_extended_id = True)
         bus2.send(msg)
         contact_active[i] = 1
 
     for i in range(6, 12):        
-        msg = can.Message(arbitration_id = 0x01200 + i,
+        msg = can.Message(arbitration_id = 0x01200 + i + 1,
                      data= [0xC0],
                      is_extended_id = True)
         bus1.send(msg)
         contact_active[i] = 1
 
     for i in range(12, 18):        
-        msg = can.Message(arbitration_id = 0x01200 + i,
+        msg = can.Message(arbitration_id = 0x01200 + i + 1,
                      data= [0xC0],
                      is_extended_id = True)
         bus4.send(msg)
         contact_active[i] = 1
 
     for i in range(18, 24):        
-        msg = can.Message(arbitration_id = 0x01200 + i,
+        msg = can.Message(arbitration_id = 0x01200 + i + 1,
                      data= [0xC0],
                      is_extended_id = True)
         bus3.send(msg)
@@ -310,28 +310,28 @@ def send_contactor_on():
 def send_contactor_off():
     #000012: contactor_off
     for i in range(0, 6):        
-        msg = can.Message(arbitration_id = 0x01200 + i,
+        msg = can.Message(arbitration_id = 0x01200 + i + 1,
                      data= [0x00],
                      is_extended_id = True)
         bus2.send(msg)
         contact_active[i] = 2
 
     for i in range(6, 12):        
-        msg = can.Message(arbitration_id = 0x01200 + i,
+        msg = can.Message(arbitration_id = 0x01200 + i + 1,
                      data= [0x00],
                      is_extended_id = True)
         bus1.send(msg)
         contact_active[i] = 2
 
     for i in range(12, 18):        
-        msg = can.Message(arbitration_id = 0x01200 + i,
+        msg = can.Message(arbitration_id = 0x01200 + i + 1,
                      data= [0x00],
                      is_extended_id = True)
         bus4.send(msg)
         contact_active[i] = 2
 
     for i in range(18, 24):        
-        msg = can.Message(arbitration_id = 0x01200 + i,
+        msg = can.Message(arbitration_id = 0x01200 + i + 1,
                      data= [0x00],
                      is_extended_id = True)
         bus3.send(msg)
@@ -450,8 +450,8 @@ class CallBackFunction(can.Listener):
         #for i in range(0, 32):
         #    esc_data_v[i] = 40 + np.random.rand() * 5
 
-        id = int(hex(msg.arbitration_id)[-2:],16)
-        if id < 32: # MAX ID number check
+        id = int(hex(msg.arbitration_id)[-2:],16) - 1
+        if id <= 24 and id != 0: # MAX ID number check
             esc_data_v[id] = int((msg.data.hex())[1:],16)/10
             esc_active[id] = 3 # green
             #esc_active_timer[id] = 3*10 # 3sec
@@ -465,8 +465,8 @@ class CallBackFunction(can.Listener):
         #ESC Volt data
         #print((msg.data.hex())[1:])
 
-        id = int(hex(msg.arbitration_id)[-2:],16)
-        if id < 32: # MAX ID number check
+        id = int(hex(msg.arbitration_id)[-2:],16) - 1
+        if id <= 24 and id != 0: # MAX ID number check
             esc_throttle[id] = int((msg.data.hex())[1:],16)
             esc_active[id] = 3 # green
             #esc_active_timer[id] = 3*10 # 3sec
@@ -476,8 +476,8 @@ class CallBackFunction(can.Listener):
     if re.search("0x82", hex(msg.arbitration_id)) != None:
         print(msg)
 
-        id = int(hex(msg.arbitration_id)[-2:],16)
-        if id < 32: # MAX ID number check
+        id = int(hex(msg.arbitration_id)[-2:],16) - 1
+        if id <= 34 and id != 0: # MAX ID number check
             esc_active[id] = 3 # 3:green
             #esc_active_timer[id] = 3*10 # 3sec
         
