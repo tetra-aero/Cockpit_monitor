@@ -1,0 +1,12 @@
+{
+    "timestamp": 1674624083586,
+    "ext": true,
+    "canid": 4608,
+    "dlc": 3,
+    "rtr": false,
+    "data": [
+        17,
+        34,
+        52
+    ]
+}
