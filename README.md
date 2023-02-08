@@ -12,6 +12,10 @@ sudo apt install net-tools
 pip3 install python-can
 ```
 
+## Supported PyQtGraph version
+# pyqtgraph (0.12.4)
+pip3 install pyqtgraph==0.12.4
+
 ## Debug
 ### case of virtual can port
 - terminal 1
