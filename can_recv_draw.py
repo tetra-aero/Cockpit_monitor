@@ -128,7 +128,8 @@ class PlotGraph:
     def __init__(self):
           
         # UIを設定
-        self.win = pg.GraphicsWindow(show=True)
+        #self.win = pg.GraphicsWindow(show=True)
+        self.win = pg.GraphicsLayoutWidget(show=True)
         self.win.setWindowTitle('ESC Voltage')
         self.win.resize(800,600)
         self.plt = self.win.addPlot()
@@ -167,7 +168,8 @@ class PlotGraph2:
     def __init__(self):
         
         # UIを設定 2
-        self.win2 = pg.GraphicsWindow()
+        #self.win2 = pg.GraphicsWindow()
+        self.win2 = pg.GraphicsLayoutWidget(show=True)
         self.win2.setWindowTitle('ESC throttle')
         self.plt2 = self.win2.addPlot()
         self.plt2.setXRange(0, 24)
@@ -205,7 +207,8 @@ class PlotGraph2:
 class LineGraph:
     def __init__(self):
         # UIを設定
-        self.win = pg.GraphicsWindow()
+        #self.win = pg.GraphicsWindow()
+        self.win = pg.GraphicsLayoutWidget()
         self.win.setWindowTitle('Avr.Voltage #24')
         self.plt = self.win.addPlot()
         self.plt.setYRange(30, 56)
@@ -229,18 +232,22 @@ class LineGraph:
 
 
 # CANバスの初期化 (#6,#7は未実装。予備)
+'''
 bus1 = can.interface.Bus(channel = 'can_spi0.0', bustype='socketcan', bitrate=125000, canfilters=None)   #Front Right wing from AvioDsubBoard and Physical Harness
 bus2 = can.interface.Bus(channel = 'can_spi0.1', bustype='socketcan', bitrate=125000, canfilters=None)   #Front Left  wing from AvioDsubBoard and Physical Harness
 bus3 = can.interface.Bus(channel = 'can_spi1.0', bustype='socketcan', bitrate=125000, canfilters=None)   #Rear  Right wing from AvioDsubBoard and Physical Harness
 bus4 = can.interface.Bus(channel = 'can_spi1.1', bustype='socketcan', bitrate=125000, canfilters=None)   #Rear  Left  wing from AvioDsubBoard and Physical Harness
+'''
 #bus5 = can.interface.Bus(channel = 'can_spi1.2', bustype='socketcan', bitrate=125000, canfilters=None)
 #bus6 = can.interface.Bus(channel = 'can_spi2.0', bustype='socketcan', bitrate=125000, canfilters=None)
 #bus7 = can.interface.Bus(channel = 'can_spi2.1', bustype='socketcan', bitrate=125000, canfilters=None)
 #bus1 = can.interface.Bus(channel = 'vcan0', bustype='socketcan', bitrate=125000, canfilters=None)
-#bus1 = can.interface.Bus(channel = 'vcan_spi0.0', bustype='socketcan', bitrate=125000, canfilters=None)
-#bus2 = can.interface.Bus(channel = 'vcan_spi0.1', bustype='socketcan', bitrate=125000, canfilters=None)
-#bus3 = can.interface.Bus(channel = 'vcan_spi1.0', bustype='socketcan', bitrate=125000, canfilters=None)
-#bus4 = can.interface.Bus(channel = 'vcan_spi1.1', bustype='socketcan', bitrate=125000, canfilters=None)
+
+bus1 = can.interface.Bus(channel = 'vcan_spi0.0', bustype='socketcan', bitrate=125000, canfilters=None)
+bus2 = can.interface.Bus(channel = 'vcan_spi0.1', bustype='socketcan', bitrate=125000, canfilters=None)
+bus3 = can.interface.Bus(channel = 'vcan_spi1.0', bustype='socketcan', bitrate=125000, canfilters=None)
+bus4 = can.interface.Bus(channel = 'vcan_spi1.1', bustype='socketcan', bitrate=125000, canfilters=None)
+
 #bus5 = can.interface.Bus(channel = 'vcan_spi1.2', bustype='socketcan', bitrate=125000, canfilters=None)
 #bus6 = can.interface.Bus(channel = 'vcan_spi2.0', bustype='socketcan', bitrate=125000, canfilters=None)
 #bus7 = can.interface.Bus(channel = 'vcan_spi2.1', bustype='socketcan', bitrate=125000, canfilters=None)
@@ -450,8 +457,8 @@ class CallBackFunction(can.Listener):
         #for i in range(0, 32):
         #    esc_data_v[i] = 40 + np.random.rand() * 5
 
-        id = int(hex(msg.arbitration_id)[-2:],16) - 1
-        if id <= 24 and id != 0: # MAX ID number check
+        id = int(hex(msg.arbitration_id)[-2:],16)
+        if id <= 24: # MAX ID number check
             esc_data_v[id] = int((msg.data.hex())[1:],16)/10
             esc_active[id] = 3 # green
             #esc_active_timer[id] = 3*10 # 3sec
@@ -465,8 +472,8 @@ class CallBackFunction(can.Listener):
         #ESC Volt data
         #print((msg.data.hex())[1:])
 
-        id = int(hex(msg.arbitration_id)[-2:],16) - 1
-        if id <= 24 and id != 0: # MAX ID number check
+        id = int(hex(msg.arbitration_id)[-2:],16)
+        if id <= 24: # MAX ID number check
             esc_throttle[id] = int((msg.data.hex())[1:],16)
             esc_active[id] = 3 # green
             #esc_active_timer[id] = 3*10 # 3sec
@@ -476,8 +483,8 @@ class CallBackFunction(can.Listener):
     if re.search("0x82", hex(msg.arbitration_id)) != None:
         print(msg)
 
-        id = int(hex(msg.arbitration_id)[-2:],16) - 1
-        if id <= 34 and id != 0: # MAX ID number check
+        id = int(hex(msg.arbitration_id)[-2:],16)
+        if id <= 34: # MAX ID number check
             esc_active[id] = 3 # 3:green
             #esc_active_timer[id] = 3*10 # 3sec
         
@@ -524,7 +531,8 @@ if __name__ == "__main__":
     #graphWin = main()   
     
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
-        QtGui.QApplication.instance().exec_()
+        #QtGui.QApplication.instance().exec_()
+        pg.exec()
 
 #except KeyboardInterrupt:
         print('exit')
