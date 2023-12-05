@@ -382,7 +382,7 @@ class Widget(QWidget):
         painter = QPainter(self)
 
 	# Draw body Image
-        painter.drawPixmap(0,0,QPixmap("mk5_image.png"))
+        painter.drawPixmap(0,0,QPixmap("./document/mk5_sn4_image.png"))
 
 
         # ESC status monitor count down
