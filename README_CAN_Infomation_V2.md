@@ -203,4 +203,8 @@
   - Health Success: 5A
   - Health Fail: FF
 
+### 0x8500 information of HV-Frame GND Leakage check
+
+### 0x8600 information of LV-Frame GND Leakage check
+
 
